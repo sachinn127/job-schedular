@@ -1,0 +1,52 @@
+# High-Throughput Job Scheduler
+
+A production-ready job scheduler built with Flask, APScheduler, and SQLAlchemy.
+
+## Features
+- Create, update, delete jobs
+- CRON-based scheduling with second-level precision
+- Job execution tracking and history
+- Multiple execution semantics (ATLEAST_ONCE, AT_MOST_ONCE, EXACTLY_ONCE)
+- Comprehensive metrics and monitoring
+- High throughput (1000s of jobs/sec)
+
+## Setup
+
+1. Clone the repository
+2. Create virtual environment: `python -m venv venv`
+3. Activate: `venv\Scripts\activate`
+4. Install: `pip install -r requirements.txt`
+5. Run: `python app.py`
+
+## API Endpoints
+
+- `POST /jobs` - Create job
+- `GET /jobs` - List jobs
+- `GET /jobs/{id}` - Get job details
+- `GET /jobs/{id}/executions` - Get execution history
+- `PUT /jobs/{id}` - Update job
+- `DELETE /jobs/{id}` - Delete job
+- `GET /metrics` - System metrics
+- `GET /health` - Health check
+
+## Example Job Creation
+```bash
+curl -X POST http://localhost:5000/jobs \
+  -H "Content-Type: application/json" \
+  -d '{"schedule":"*/5 * * * * *","api":"https://httpbin.org/post","type":"ATLEAST_ONCE"}'
+```
+
+## Project Structure
+
+- `app.py` - Flask application
+- `models.py` - Database models
+- `scheduler_service.py` - Core scheduling logic
+- `job_executor.py` - Job execution
+- `cron_parser.py` - CRON parsing
+- `observability.py` - Logging and metrics
+- `requirements.txt` - Dependencies
+- `.env` - Configuration
+
+## License
+
+MIT

@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  scheduler:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      FLASK_ENV: production
+      DATABASE_URL: postgresql://scheduler:scheduler123@db:5432/scheduler
+      LOG_DIR: /app/logs
+    volumes:
+      - ./logs:/app/logs
+      - ./data:/app/data
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - scheduler-network
+    restart: unless-stopped
+
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: scheduler
+      POSTGRES_PASSWORD: scheduler123
+      POSTGRES_DB: scheduler
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U scheduler"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - scheduler-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+
+networks:
+  scheduler-network:
+    driver: bridge
